@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='all_user.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    {% for user in users %}
+    <div class="user">
+        <div class="user__img">
+            <img src="{{ url_for('static', filename=user['avatar']) }}" alt="avatar" />
+        </div>
+        <div class="user__about">
+            <p class="name">{{ user["name"] }}</p>
+            <p class="username">@{{ user["username"] }}</p>
+        </div>
+        <a href="{{ url_for('user', id=user['id']) }}" class="learn__button">View</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
