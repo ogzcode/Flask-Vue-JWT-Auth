@@ -25,5 +25,4 @@ def all_user():
 @app.route('/user/<int:id>')
 def user(id):
     user_data = find_user(id)
-    print(user_data)
     return render_template("user.html", user=user_data)
