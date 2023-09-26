@@ -8,4 +8,6 @@ class Config:
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = "secret-key"
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
+    JWT_ERROR_MESSAGE_KEY = "message"
+    JWT_ACCESS_DENIED_MESSAGE = "Token has expired. Please log in again."

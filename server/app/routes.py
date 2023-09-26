@@ -7,7 +7,7 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 def index():
     return "Hello, World!"
 
-@app.route("/register", methods=["POST"])
+@app.route("/signup", methods=["POST"])
 def register():
     data = request.get_json()
     
@@ -16,7 +16,7 @@ def register():
     email = data["email"]
 
     if (User.query.filter_by(username=username).first() is not None):
-        return "Username already exists"
+        return jsonify({"message": "Username already exists"}), 409
     
     user = User(username=username, email=email)
     user.set_password(password)
@@ -24,7 +24,7 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"message": "User created successfully"})
+    return jsonify({"message": "User created successfully"}), 200
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -35,17 +35,17 @@ def login():
 
     user = User.query.filter_by(username=username).first()
     if (user is None or not user.check_password(password)):
-        return jsonify({"message": "Bad username or password"}), 401
+        return jsonify({"message": "Invalid credentials"}), 401
     
     access_token = create_access_token(identity=username)
     
     return jsonify({
         "status": "success",
         "message": "Login successful", 
-        "access_token": access_token, 
-        "username": user.username, 
-        "email": user.email
-        })
+        "data": {
+            "access_token": access_token
+        }
+        }), 200
 
 @app.route("/protected", methods=["GET"])
 @jwt_required()
@@ -55,8 +55,10 @@ def protected():
 
     return jsonify({
         "status": "success",
-        "username": user.username,
-        "email": user.email
+        "data": {
+            "username": user.username,
+            "email": user.email
+        }
         }), 200
 
     
