@@ -9,10 +9,10 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
     const isAuthenticated = ref(false)
 
-    const login = (data) => {
-        Login(data.email, data.password)
+    const login = ({ username, password }) => {
+        Login(username, password)
             .then(response => {
-                saveToken(response.data.token)
+                saveToken(response.data.data.access_token)
                 router.push({ name: 'Home' })
                 isAuthenticated.value = true
             })
@@ -21,10 +21,9 @@ export const useAuthStore = defineStore('auth', () => {
             })
     }
 
-    const register = (data) => {
-        Signup(data.email, data.password)
+    const signUp = ({ email, password, username }) => {
+        Signup(email, password, username)
             .then(response => {
-                console.log(response)
                 router.push({ name: 'Login' })
             })
             .catch(error => {
@@ -33,33 +32,37 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const logout = () => {
-        Logout()
+        destroyToken()
+        router.push({ name: 'Login' })
+        isAuthenticated.value = false
+    }
+
+    const getProfile = () => {
+        GetProfile()
             .then(response => {
-                destroyToken()
-                router.push({ name: 'Login' })
-                isAuthenticated.value = false
+                console.log(response.data)
+                user.value = response.data.data
             })
             .catch(error => {
                 console.log(error)
             })
     }
 
-    const getProfile = () => {
-        GetProfile()
-            .then(response => {
-                user.value = response.data
-            })
-            .catch(error => {
-                console.log(error)
-            })
+    const checkAuth = () => {
+        if (getToken() && !isAuthenticated.value) {
+            isAuthenticated.value = true
+        } else {
+            isAuthenticated.value = false
+        }
     }
 
     return {
         user,
         isAuthenticated,
         login,
-        register,
+        signUp,
         logout,
         getProfile,
+        checkAuth
     }
 });

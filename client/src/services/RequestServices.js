@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { getToken } from './JwtServices';
+import { getToken, destroyToken } from './JwtServices';
 
 export const request = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:5000',
     timeout: 1000,
     headers: {
         'Content-Type': 'application/json',
@@ -19,6 +19,18 @@ export const setupInterceptors = () => {
             return config;
         },
         (error) => {
+            return Promise.reject(error);
+        }
+    );
+
+    request.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (error.response.status === 401) {
+                destroyToken();
+            }
             return Promise.reject(error);
         }
     );

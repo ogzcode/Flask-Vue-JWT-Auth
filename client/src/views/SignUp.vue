@@ -4,13 +4,21 @@
             <h1 class="font-poppins-700 text-slate-700 text-3xl text-center mb-8">Sing Up</h1>
 
             <div class="mb-4">
+                <label for="username" class="font-poppins-300 block text-sm text-slate-500 mb-1">Username</label>
+                <input type="text" v-model="username" id="username"
+                    class="font-poppins-500 w-full outline-0 border border-slate-400 p-2 text-slate-600" />
+            </div>
+
+            <div class="mb-4">
                 <label for="email" class="font-poppins-300 block text-sm text-slate-500 mb-1">Email</label>
-                <input type="email" v-model="email" id="email" class="font-poppins-500 w-full outline-0 border border-slate-400 p-2 text-slate-600" />
+                <input type="email" v-model="email" id="email"
+                    class="font-poppins-500 w-full outline-0 border border-slate-400 p-2 text-slate-600" />
             </div>
 
             <div class="mb-8">
                 <label for="password" class="font-poppins-300 block text-sm text-slate-500 mb-1">Password</label>
-                <input type="password" v-model="password" id="password" class="font-poppins-500 w-full outline-0 border border-slate-400 p-2 text-slate-600" />
+                <input type="password" v-model="password" id="password"
+                    class="font-poppins-500 w-full outline-0 border border-slate-400 p-2 text-slate-600" />
             </div>
 
             <div class="text-center mb-4">
@@ -25,14 +33,17 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from "../stores/auth"
 
+const authStore = useAuthStore()
+
+const username = ref('')
 const email = ref('')
 const password = ref('')
 
 const handleSubmit = () => {
-    console.log('email', email.value)
+    authStore.signUp({ email: email.value, password: password.value, username: username.value });
 }
-
 
 </script>
 

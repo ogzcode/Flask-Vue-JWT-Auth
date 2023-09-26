@@ -1,23 +1,24 @@
 import { request } from './RequestServices';
 
-export const Login = (email, password) => {
+export const Login = (username, password) => {
     return request({
         url: '/login',
         method: 'POST',
         data: {
-            email,
+            username,
             password
         }
     })
 }
 
-export const Signup = (email, password) => {
+export const Signup = (email, password, username) => {
     return request({
         url: '/signup',
         method: 'POST',
         data: {
             email,
-            password
+            password,
+            username
         }
     })
 }
